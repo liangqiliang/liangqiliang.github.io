@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Spring一知半解(1)-在IoC容器中装配Bean | 卖姑娘的小火柴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="对于Spring来说，提供了基于XML、基于注解、基于Java类三种方式在IoC容器中装配Bean">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring一知半解(1)-在IoC容器中装配Bean">
+<meta property="og:url" content="https://github.com/liangqiliang/2017/01/05/SpringNote-BeansAssemblyInIoc/index.html">
+<meta property="og:site_name" content="卖姑娘的小火柴">
+<meta property="og:description" content="对于Spring来说，提供了基于XML、基于注解、基于Java类三种方式在IoC容器中装配Bean">
+<meta property="og:updated_time" content="2017-01-11T08:34:14.823Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring一知半解(1)-在IoC容器中装配Bean">
+<meta name="twitter:description" content="对于Spring来说，提供了基于XML、基于注解、基于Java类三种方式在IoC容器中装配Bean">
+  
+    <link rel="alternative" href="/atom.xml" title="卖姑娘的小火柴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/logo.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/images/myheadimage.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">梁七良</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">我还没想好，你就进来了</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="#" title="weibo">weibo</a>
+                            
+                                <a class="fl google" target="_blank" href="#" title="google">google</a>
+                            
+                                <a class="fl twitter" target="_blank" href="#" title="twitter">twitter</a>
+                            
+                                <a class="fl linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/NodeJs/" style="font-size: 10px;">NodeJs</a> <a href="/tags/Schema/" style="font-size: 10px;">Schema</a> <a href="/tags/Spring/" style="font-size: 20px;">Spring</a> <a href="/tags/aop/" style="font-size: 10px;">aop</a> <a href="/tags/bean/" style="font-size: 13.33px;">bean</a> <a href="/tags/nmp/" style="font-size: 10px;">nmp</a> <a href="/tags/xml/" style="font-size: 16.67px;">xml</a> <a href="/tags/代理/" style="font-size: 13.33px;">代理</a> <a href="/tags/代理工厂/" style="font-size: 13.33px;">代理工厂</a> <a href="/tags/依赖/" style="font-size: 10px;">依赖</a> <a href="/tags/分页/" style="font-size: 10px;">分页</a> <a href="/tags/增强/" style="font-size: 10px;">增强</a> <a href="/tags/拦截器/" style="font-size: 10px;">拦截器</a> <a href="/tags/数据库/" style="font-size: 10px;">数据库</a> <a href="/tags/数据源/" style="font-size: 10px;">数据源</a> <a href="/tags/缓存/" style="font-size: 10px;">缓存</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://luuman.github.io/">name</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">梁七良</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/images/myheadimage.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">梁七良</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">我还没想好，你就进来了</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+                    
+                        <a class="google" target="_blank" href="#" title="google">google</a>
+                    
+                        <a class="twitter" target="_blank" href="#" title="twitter">twitter</a>
+                    
+                        <a class="linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-SpringNote-BeansAssemblyInIoc" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/05/SpringNote-BeansAssemblyInIoc/" class="article-date">
+      <time datetime="2017-01-05T08:36:53.000Z" itemprop="datePublished">2017-01-05</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spring一知半解(1)-在IoC容器中装配Bean
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a><a class="article-category-link" href="/categories/Spring/Java/">Java</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bean/">bean</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xml/">xml</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/依赖/">依赖</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>对于Spring来说，提供了基于XML、基于注解、基于Java类三种方式在IoC容器中装配Bean</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="基于XML的配置"><a href="#基于XML的配置" class="headerlink" title="基于XML的配置"></a>基于XML的配置</h2><h3 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h3><p>指定命名空间的<code>Schema</code>文件地址有两个用途：<br>    1.XML解析器可以获取<code>Schema</code>文件并对文档进行格式合法性验证；<br>    2.在开发环境下，IDE通过引用Schema文件可以对文档编辑提供提示诱导功能。<br>Spring配置的升级是向前兼容的，最好使用最新的配置说明。</p>
+<h3 id="Bean的命名"><a href="#Bean的命名" class="headerlink" title="Bean的命名"></a>Bean的命名</h3><p>较为简单，不再细谈，讲几点注意的：<br>    id在IoC容器中必须是唯一的，而name可以不唯一；相同name的情况下，后面的Bean会覆盖前面同名的Bean，所以为了防止覆盖产生的隐患，尽量使用id；<br>    id和name都未指定时，自动将全限定类名作为Bean的名称；如，<code>getBean(
+    &quot;com.lql.util.Car&quot;)</code></p>
+<h3 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h3><h4 id="属性注入"><a href="#属性注入" class="headerlink" title="属性注入"></a>属性注入</h4><p>通过<code>Setter</code>方法注入Bean的属性值或依赖对象；<br>要求Bean提供一个默认的构造函数，并为需要注入的属性提供<code>Setter</code>方法；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"car"</span> class=<span class="string">"com.lql.util.Car"</span>&gt;</div><div class="line">	&lt;property name=<span class="string">"color"</span>&gt;&lt;value&gt;![CDATA[red&amp;bule]]&lt;/value&gt;&lt;/property&gt;</div><div class="line">	&lt;property name=<span class="string">"price"</span>&gt;&lt;value&gt;2000&lt;/value&gt;&lt;/property&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure>
+<p>在变量命名的时候，需要注意一条规范<strong>“变量的前两个字母要么全部大写，要么全部小写”</strong>，避免因为<code>Setter</code>方法不正确而导致配置错误。</p>
+<p><code>![CDATA[XXX]]</code>的作用是让XML解析器将标签中的字符串当做普通的文本对待，以防止某些字符对XML格式的破坏；<br>如果不使用<code>![CDATA[XXX]]</code>，则需要另外的转义字符：</p>
+<table>
+<thead>
+<tr>
+<th>特殊符号</th>
+<th>转义序列 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;</td>
+<td>&lt;  </td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>&gt;</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>&amp;</td>
+</tr>
+<tr>
+<td>“</td>
+<td>&quot;</td>
+</tr>
+<tr>
+<td>‘</td>
+<td>&apos;</td>
+</tr>
+</tbody>
+</table>
+<h4 id="构造函数注入"><a href="#构造函数注入" class="headerlink" title="构造函数注入"></a>构造函数注入</h4><p>用途：如果某一个对象必须提供两个及以上的属性值，通过属性注入方法只能在配置时提供保证，而无法在语法级提供保证；<br>使用构造函数注入的前提是Bean必须提供带参的构造函数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Car &#123;</div><div class="line">	...</div><div class="line">	public Car(String color, int price) &#123;</div><div class="line">		this.color = color;</div><div class="line">		this.price = price;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"car"</span> class=<span class="string">"com.lql.util.Car"</span>&gt;</div><div class="line">	&lt;construct-arg <span class="built_in">type</span>=<span class="string">"java.lang.String"</span>&gt;&lt;value&gt;red&lt;/value&gt;&lt;/property&gt;</div><div class="line">	&lt;construct-arg <span class="built_in">type</span>=<span class="string">"int"</span>&gt;&lt;value&gt;2000&lt;/value&gt;&lt;/property&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure>
+<p>在只有一个构造函数的情况下，<code>&lt;construct-arg&gt;</code>声明顺序可以用于确定构造函数入参的顺序；<br>由于Spring使用Java反射机制调用Setter方法完成属性注入，但不会记住构造函数的入参名，只能通过入参类型和索引信息间接确定构造函数配置项和入参的对应关系，如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"car"</span> class=<span class="string">"com.lql.util.Car"</span>&gt;</div><div class="line">	&lt;construct-arg index=<span class="string">"0"</span> <span class="built_in">type</span>=<span class="string">"java.lang.String"</span>&gt;&lt;value&gt;red&lt;/value&gt;&lt;/property&gt;</div><div class="line">	&lt;construct-arg index=<span class="string">"1"</span> <span class="built_in">type</span>=<span class="string">"int"</span>&gt;&lt;value&gt;2000&lt;/value&gt;&lt;/property&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure>
+<p>当有多个构造函数，这些个构造函数某些参数类型不一致，只需要明确指定不一致参数的类型就可以避免冲突：</p>
+<p>当如果Bean的构造函数入参类型可辨别，意思是非基础数据类型且类型互不相同，配置里不提供类型和索引，也可以完成注入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class Desk &#123;</div><div class="line">	...</div><div class="line">	public Car(String color, Book book, Pen pen) &#123;</div><div class="line">		this.color = color;</div><div class="line">		this.book = book;</div><div class="line">		this.pen = pen;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"Desk"</span> class=<span class="string">"com.lql.util.Desk"</span>&gt;</div><div class="line">	&lt;construct-arg&gt;&lt;value&gt;red&lt;/value&gt;&lt;/property&gt;</div><div class="line">	&lt;construct-arg&gt;&lt;ref bean=<span class="string">"book"</span>/&gt;&lt;/property&gt;</div><div class="line">	&lt;construct-arg&gt;&lt;ref bean=<span class="string">"pen"</span>/&gt;&lt;/property&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure>
+<p>循环依赖问题：两个Bean都采用构造函数注入，并且参数引用彼此，就会发生类似于线程死锁的循环依赖问题；<br><strong>解决方法</strong>： 将构造函数注入方式调整为属性注入方式</p>
+<h4 id="工厂方法注入"><a href="#工厂方法注入" class="headerlink" title="工厂方法注入"></a>工厂方法注入</h4><p>非静态工厂方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class CarFactory &#123;</div><div class="line">	public Car <span class="function"><span class="title">createOneCar</span></span>() &#123;</div><div class="line">		Car car = new Car();</div><div class="line">		car.setColor(<span class="string">"blue"</span>);</div><div class="line">		<span class="built_in">return</span> car;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"carFactory"</span> class=<span class="string">"com.lql.factory.CarFactory"</span>&gt;</div><div class="line">&lt;bean id=<span class="string">"car1"</span> factory-bean=<span class="string">"carFactory"</span> factory-method=<span class="string">"createOneCar"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>静态工厂方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class CarFactory &#123;</div><div class="line">	public static Car <span class="function"><span class="title">createOneCar</span></span>() &#123;</div><div class="line">		Car car = new Car();</div><div class="line">		car.setColor(<span class="string">"blue"</span>);</div><div class="line">		<span class="built_in">return</span> car;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"car2"</span> factory-bean=<span class="string">"com.lql.factory.CarFactory"</span> factory-method=<span class="string">"createOneCar"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>因为工厂方法需要额外的类和代码，这些功能和业务是没有关系的，Spring容器已经有一种更好的方式实现了传统工厂模式的所有功能，所以不需要我们再去做类似的工作。</p>
+<h3 id="Bean之间的关系"><a href="#Bean之间的关系" class="headerlink" title="Bean之间的关系"></a>Bean之间的关系</h3><h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>如果多个Bean之间存在有相同的配置信息，可以定义一个父<code>&lt;bean&gt;</code>，子<code>&lt;bean&gt;</code>将自动继承父<code>&lt;bean&gt;</code>的配置信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"car1"</span> class=<span class="string">"com.lql.util.Car"</span> p:price=<span class="string">"2000"</span> p:color=<span class="string">"黑色"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"car2"</span> class=<span class="string">"com.lql.util.Car"</span> p:price=<span class="string">"2000"</span> p:color=<span class="string">"白色"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>上面两个Bean存在重复信息，可以定义一个父<code>&lt;bean&gt;</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"abstractCar"</span> class=<span class="string">"com.lql.util.Car"</span> p:price=<span class="string">"2000"</span> p:color=<span class="string">"黑色"</span> abstract=<span class="string">"true"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"car1"</span> p:color=<span class="string">"黑色"</span> parent=<span class="string">"abstractCar"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"car2"</span> p:color=<span class="string">"白色"</span> parent=<span class="string">"abstractCar"</span>/&gt;</div></pre></td></tr></table></figure>
+<h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><p>可以使用<code>&lt;ref&gt;</code>元素标签来建立对其他Bean的依赖关系;<br>当实例化一个Bean时，Spring保证该Bean所以来的其他Bean已经初始化；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"manager"</span> class=<span class="string">"com.lql.util.Manager"</span> depends-on=<span class="string">"init"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"init"</span> class=<span class="string">"com.lql.util.Init"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>通过<code>depends-on</code>来指定Bean前置依赖的Bean。</p>
+<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><p>虽然可以通过Bean的属性值来指定引用，但是两者没有建立引用关系，在一个Bean中引用另外Bean的id是希望在运行期通过getBean(name)来获取对应的Bean；<br>通过标签<code>&lt;idref&gt;</code>来引用另一个Bean：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"pen"</span> class=<span class="string">"com.lql.util.Pen"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"desk"</span> class=<span class="string">"com.lql.util.Desk"</span>&gt;</div><div class="line">	&lt;property name=<span class="string">"penId"</span>&gt;</div><div class="line">		&lt;idref bean = <span class="string">"pen"</span>&gt;</div><div class="line">	&lt;/property&gt;</div><div class="line">&lt;/bean&gt;</div></pre></td></tr></table></figure>
+<h3 id="多个配置文件整合"><a href="#多个配置文件整合" class="headerlink" title="多个配置文件整合"></a>多个配置文件整合</h3><p>启动Spring容器时，可以通过<code>&lt;import&gt;</code>将多个配置文件引入到一个文件中，进行配置文件的集成：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;import resource=<span class="string">"classpath:com/lql/xml/beans1.xml"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>当一个配置文件中的Bean引用另一个配置文件中Bean时，并不一定需要<code>&lt;import&gt;</code>来引入这个配置文件；只需要在启动容器时，两个配置文件都在列表中，会自动在内存中合并他们。</p>
+<h2 id="基于注解的配置"><a href="#基于注解的配置" class="headerlink" title="基于注解的配置"></a>基于注解的配置</h2><h3 id="使用注解定义Bean"><a href="#使用注解定义Bean" class="headerlink" title="使用注解定义Bean"></a>使用注解定义Bean</h3><p><code>@Component</code><br><code>@Repository</code>：用于对DAO实现类进行标注<br><code>@Service</code>： 用于对Service实现类进行标注<br><code>@Controller</code>：用于对Controller实现类进行标注<br>上面四个注解基本等效，Spring容器自动将<code>POJO类</code>转换为容器管理的Bean;<br>在配置文件中加入自动扫描类包中有注解的Bean的配置信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-package=<span class="string">"com.lql.util"</span>&gt;</div></pre></td></tr></table></figure>
+<p><code>bas-package</code>属性指定一个需要扫描的基类包，会自动扫描所有类，并从类的注解信息中获取Bean的定义信息；<br>使用<code>resource-pattern</code>属性过滤出特定的类：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;!--仅会扫描基包里util里子包中的类 --&gt;</div><div class="line">&lt;context:component-scan base-package=<span class="string">"com.lql"</span> resource-pattern=<span class="string">"util/*.class"</span></div></pre></td></tr></table></figure>
+<p>也可以使用<code>&lt;context:include-filter&gt;</code>或者<code>&lt;context:exclude-filter&gt;</code>进行过滤，前者表示包含的目标类，后者表示要排除在外的目标类：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-package=<span class="string">"com.lql"</span>&gt;</div><div class="line">	&lt;context:include-filter <span class="built_in">type</span>=<span class="string">"regex"</span> expression=<span class="string">"com\.lql\.util.*"</span>/&gt;</div><div class="line">	&lt;context:exclude-filter <span class="built_in">type</span>=<span class="string">"aspectj"</span> expression=<span class="string">"com.lql..*Controller+"</span>/&gt;</div><div class="line">&lt;/context:component-scan&gt;</div></pre></td></tr></table></figure>
+<p>更多的关于过滤表达式的细节，以后再深究。</p>
+<h3 id="自动配置Bean"><a href="#自动配置Bean" class="headerlink" title="自动配置Bean"></a>自动配置Bean</h3><h4 id="Autowired"><a href="#Autowired" class="headerlink" title="@Autowired"></a>@Autowired</h4><p>通过<code>@Autowired</code>注解实现Bean的依赖注入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Service</div><div class="line">public class myService &#123;</div><div class="line">	@Autowired</div><div class="line">	private UserDao userDao;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>@Autowired</code>默认按类型匹配的方式，在容器查找匹配的Bean，当有且仅有一个匹配的Bean时，Spring将其注入到@Autowired标注的变量中；<br>没有发现匹配的Bean时，抛出<code>NoSuchBeanDefinitionException</code>的异常；<br>如果希望不抛出异常，则可以使用<code>@Autowired(required=false)</code>进行标注。</p>
+<h4 id="Qualifier"><a href="#Qualifier" class="headerlink" title="@Qualifier"></a>@Qualifier</h4><p>如果容器中有一个以上可以匹配的Bean时，可以通过<code>@Qualifier</code>限定Bean的名称：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Service</div><div class="line">public class myService &#123;</div><div class="line">	@Autowired(required=<span class="literal">false</span>)</div><div class="line">	@Qualifier(<span class="string">"userDao"</span>)</div><div class="line">	private UserDao userDao;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="对类方法进行标注"><a href="#对类方法进行标注" class="headerlink" title="对类方法进行标注"></a>对类方法进行标注</h4><p><code>@Autowired</code>也可以对类方法标注入参，通过<code>@Qualifier</code>限定Bean的名称：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">@Service</div><div class="line">public class myService &#123;</div><div class="line">	private UserDao userDao;</div><div class="line"></div><div class="line">	@Autowired(required=<span class="literal">false</span>)</div><div class="line">	@Qualifier(<span class="string">"userDao"</span>)</div><div class="line">	public void <span class="built_in">set</span>UserDao(UserDao userDao) &#123;</div><div class="line">		this.userDao = userDao;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="对集合类进行标注"><a href="#对集合类进行标注" class="headerlink" title="对集合类进行标注"></a>对集合类进行标注</h4><p><code>@Autowired</code>也可以对类中集合类的变量或方法标注，容器中类型匹配的所有Bean都自动注入进来：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Component</div><div class="line">public class MyComponent &#123;</div><div class="line">	@Autowired(required=<span class="literal">false</span>)</div><div class="line">	private List&lt;Plugin&gt; plugins;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Resource-Inject"><a href="#Resource-Inject" class="headerlink" title="@Resource @Inject"></a>@Resource @Inject</h4><p><code>@Resource @Inject</code>与<code>@Autowired</code>功能类似，不同的是：<br><code>@Resource</code>要求提供一个Bean名称的属性：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">@Resource(<span class="string">"userDao"</span>)</div><div class="line">	private UserDao userDao;</div></pre></td></tr></table></figure>
+<p>如果没有属性，则自动采用标注出的变量名或方法名作为Bean的名称；<br><code>@Resource @Inject</code>功能不如<code>@Autowired</code>，若无必要无需过分关注这两个注解。</p>
+<h3 id="Bean作用范围及生命过程方法"><a href="#Bean作用范围及生命过程方法" class="headerlink" title="Bean作用范围及生命过程方法"></a>Bean作用范围及生命过程方法</h3><p>Bean配置默认的作用范围时<code>singleton</code>；<br>可以通过<code>@Scope</code>注解显示指定Bean的作用范围：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Scope(<span class="string">"prototype"</span>)</div><div class="line">@Component</div><div class="line">public class MyComponent &#123;</div><div class="line">	@Autowired(required=<span class="literal">false</span>)</div><div class="line">	private List&lt;Plugin&gt; plugins;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>还可以通过<code>@PostConstruct</code>和<code>@PreDestroy</code>注解指定Bean的初始化及容器销毁前执行的方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">@Scope(<span class="string">"prototype"</span>)</div><div class="line">@Component</div><div class="line">public class MyComponent &#123;</div><div class="line">	@Autowired(required=<span class="literal">false</span>)</div><div class="line">	private List&lt;Plugin&gt; plugins;</div><div class="line"></div><div class="line">	@PostConstruct</div><div class="line">	private void <span class="function"><span class="title">init</span></span>() &#123;</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@PreDestroy</div><div class="line">	private void <span class="function"><span class="title">destroy</span></span>() &#123;</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Spring先调用构造函数实例化Bean，再执行<code>@Autowired</code>进行自动注入，再分别执行<code>@PostConstruct</code>方法，当容器关闭时，分别执行<code>@PreDestroy</code>方法。</p>
+<h2 id="基于Java类的配置"><a href="#基于Java类的配置" class="headerlink" title="基于Java类的配置"></a>基于Java类的配置</h2><h3 id="使用Java类提供Bean定义信息"><a href="#使用Java类提供Bean定义信息" class="headerlink" title="使用Java类提供Bean定义信息"></a>使用Java类提供Bean定义信息</h3><p>普通POJO(简单的Java对象，实际就是普通JavaBeans，是为了避免和EJB混淆所创造的简称)只要标注<code>@Configuration</code>，就可以为容器提供Bean的定义信息，每个标注了<code>@Bean</code>的类方法都相当于提供一个Bean的定义信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">public class MyApp &#123;</div><div class="line">	@Bean</div><div class="line">	public UserDao <span class="function"><span class="title">userDao</span></span>()&#123;</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">	@Bean</div><div class="line">	public MyService <span class="function"><span class="title">appService</span></span>() &#123;</div><div class="line">		MyService myService = new MyService();</div><div class="line">		myService.setUserDao(userDao());</div><div class="line">		<span class="built_in">return</span> myService</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上的配置和一下XML配置等效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"userDao"</span> class=<span class="string">"com.lql.util.UserDao"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"myService"</span> class=<span class="string">"com.lql.util.MyService"</span></div><div class="line">	p:userDao-ref=<span class="string">"userDao"</span>/&gt;</div></pre></td></tr></table></figure>
+<h3 id="使用基于Java类的配置信息启动Spring容器"><a href="#使用基于Java类的配置信息启动Spring容器" class="headerlink" title="使用基于Java类的配置信息启动Spring容器"></a>使用基于Java类的配置信息启动Spring容器</h3><p>通过标注<code>@Configuration</code>的Java类启动Spring容器;<br>还支持通过编码的方式加载多个<code>@Configuration</code>配置类，然后通过刷新容器应用这些配置类：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@</div><div class="line">AnnotatinConfigApplicationContext ctx = new AnnotatinConfigApplicationContext(MyService.class);</div><div class="line">ctx.register(DaoConfig.class);</div><div class="line">ctx.refresh();</div><div class="line">MyApp myApp  = ctx.getBean(MyService.class);</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>也可以通过<code>@Import</code>将多个配置类组装到一个配置类中，这样仅需要注册这个组装好的配置类就可以启动容器了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">@import(DaoConfig.class)</div><div class="line">public class MyDao &#123;</div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果希望将配置类组装到XML配置文件中，通过XML配置文件启动Spring容器，仅需要在XML中通过`<context:component-scan>扫描到相应的配置类就可以了：</context:component-scan></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-package=<span class="string">"com.lql.conf"</span></div><div class="line">	resource-pattern=<span class="string">"AppConf.class"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>如果在beans.xml中定义了两个Bean，在<code>@Configuration</code>配置类中可通过<code>@ImportResource</code>引入XML配置文件，在配置类中即可通过<code>@Autowired</code>实现XML配置中Bean的注入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">@ImportResource(<span class="string">"classpath:com/lql/conf/beans.xml"</span>)</div><div class="line">public class AppConfig &#123;</div><div class="line">	@Bean</div><div class="line">	@AutoWired</div><div class="line">	public MyService myService(...) &#123;</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="不同配置方式取舍"><a href="#不同配置方式取舍" class="headerlink" title="不同配置方式取舍"></a>不同配置方式取舍</h2><table>
+<thead>
+<tr>
+<th>基于XML配置</th>
+<th>基于注解配置</th>
+<th>基于Java类配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.Bean实现类来源于第三方类库，如DataSource,JdbcTemplate、SessionFactory等，因无法在类中标注注解，通过XML配置方式较好；2.命名空间的配置，如aop、context等，只能采用基于XML的配置。</td>
+<td>Bean的实现类是当前项目开发的，可以直接在Java类中使用基于注解的配置。</td>
+<td>基于Java配置的优势在于可以通过代码方式控制Bean初始化的整体逻辑，所以如果实例化Bean的逻辑比较负复杂，则比较适用基于Java类配置的方式。</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/01/05/SpringNote-BeansAssemblyInIoc/">Spring一知半解(1)-在IoC容器中装配Bean</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 梁七良 的个人博客">梁七良</a></p>
+        <p><span>发布时间:</span>2017年01月05日 - 16时36分</p>
+        <p><span>最后更新:</span>2017年01月11日 - 16时34分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/05/SpringNote-BeansAssemblyInIoc/" title="Spring一知半解(1)-在IoC容器中装配Bean">https://github.com/liangqiliang/2017/01/05/SpringNote-BeansAssemblyInIoc/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://github.com/liangqiliang/2017/01/05/SpringNote-BeansAssemblyInIoc/　　作者: 梁七良" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Spring一知半解(3)-AOP(1)基础知识与动态代理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/01/04/MultipleDataSource/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spring一知半解(2)-基于注解多数据源切换及配置问题</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于XML的配置"><span class="toc-number">1.</span> <span class="toc-text">基于XML的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命名空间"><span class="toc-number">1.1.</span> <span class="toc-text">命名空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bean的命名"><span class="toc-number">1.2.</span> <span class="toc-text">Bean的命名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖注入"><span class="toc-number">1.3.</span> <span class="toc-text">依赖注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#属性注入"><span class="toc-number">1.3.1.</span> <span class="toc-text">属性注入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#构造函数注入"><span class="toc-number">1.3.2.</span> <span class="toc-text">构造函数注入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#工厂方法注入"><span class="toc-number">1.3.3.</span> <span class="toc-text">工厂方法注入</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bean之间的关系"><span class="toc-number">1.4.</span> <span class="toc-text">Bean之间的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#继承"><span class="toc-number">1.4.1.</span> <span class="toc-text">继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#依赖"><span class="toc-number">1.4.2.</span> <span class="toc-text">依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#引用"><span class="toc-number">1.4.3.</span> <span class="toc-text">引用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多个配置文件整合"><span class="toc-number">1.5.</span> <span class="toc-text">多个配置文件整合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于注解的配置"><span class="toc-number">2.</span> <span class="toc-text">基于注解的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用注解定义Bean"><span class="toc-number">2.1.</span> <span class="toc-text">使用注解定义Bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动配置Bean"><span class="toc-number">2.2.</span> <span class="toc-text">自动配置Bean</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Autowired"><span class="toc-number">2.2.1.</span> <span class="toc-text">@Autowired</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Qualifier"><span class="toc-number">2.2.2.</span> <span class="toc-text">@Qualifier</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对类方法进行标注"><span class="toc-number">2.2.3.</span> <span class="toc-text">对类方法进行标注</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对集合类进行标注"><span class="toc-number">2.2.4.</span> <span class="toc-text">对集合类进行标注</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Resource-Inject"><span class="toc-number">2.2.5.</span> <span class="toc-text">@Resource @Inject</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bean作用范围及生命过程方法"><span class="toc-number">2.3.</span> <span class="toc-text">Bean作用范围及生命过程方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于Java类的配置"><span class="toc-number">3.</span> <span class="toc-text">基于Java类的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Java类提供Bean定义信息"><span class="toc-number">3.1.</span> <span class="toc-text">使用Java类提供Bean定义信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用基于Java类的配置信息启动Spring容器"><span class="toc-number">3.2.</span> <span class="toc-text">使用基于Java类的配置信息启动Spring容器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不同配置方式取舍"><span class="toc-number">4.</span> <span class="toc-text">不同配置方式取舍</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2017/01/05/SpringNote-BeansAssemblyInIoc/" data-title="Spring一知半解(1)-在IoC容器中装配Bean" data-url="https://github.com/liangqiliang/2017/01/05/SpringNote-BeansAssemblyInIoc/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"liangqiliang"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/" title="上一篇: Spring一知半解(3)-AOP(1)基础知识与动态代理">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/01/04/MultipleDataSource/" title="下一篇: Spring一知半解(2)-基于注解多数据源切换及配置问题">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/01/10/SpringNote-SpringAOP(2)Advice/">Spring一知半解(4)-AOP(2)织入增强类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/">Spring一知半解(3)-AOP(1)基础知识与动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/SpringNote-BeansAssemblyInIoc/">Spring一知半解(1)-在IoC容器中装配Bean</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/MultipleDataSource/">Spring一知半解(2)-基于注解多数据源切换及配置问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/03/Mybatis-PagingInterceptorAndCache/">Mybatis一知半解(1)-分页拦截器及相关的缓存机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/XmlConfiguration/">Spring一知半解-Xml配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/BuildBlog(git-hexo-nodejs)/">使用git+hexo+nodejs搭建个人博客</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 梁七良
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >visit: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">view: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

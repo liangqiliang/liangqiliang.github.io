@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Spring一知半解(4)-AOP(2)织入增强类 | 卖姑娘的小火柴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="增强，是向目标类织入的横切逻辑代码，分为：前置增强、后置增强、环绕增强、异常增强、引介增强">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring一知半解(4)-AOP(2)织入增强类">
+<meta property="og:url" content="https://github.com/liangqiliang/2017/01/10/SpringNote-SpringAOP(2)Advice/index.html">
+<meta property="og:site_name" content="卖姑娘的小火柴">
+<meta property="og:description" content="增强，是向目标类织入的横切逻辑代码，分为：前置增强、后置增强、环绕增强、异常增强、引介增强">
+<meta property="og:updated_time" content="2017-01-11T08:34:14.744Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring一知半解(4)-AOP(2)织入增强类">
+<meta name="twitter:description" content="增强，是向目标类织入的横切逻辑代码，分为：前置增强、后置增强、环绕增强、异常增强、引介增强">
+  
+    <link rel="alternative" href="/atom.xml" title="卖姑娘的小火柴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/logo.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/images/myheadimage.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">梁七良</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">我还没想好，你就进来了</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="#" title="weibo">weibo</a>
+                            
+                                <a class="fl google" target="_blank" href="#" title="google">google</a>
+                            
+                                <a class="fl twitter" target="_blank" href="#" title="twitter">twitter</a>
+                            
+                                <a class="fl linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/NodeJs/" style="font-size: 10px;">NodeJs</a> <a href="/tags/Schema/" style="font-size: 10px;">Schema</a> <a href="/tags/Spring/" style="font-size: 20px;">Spring</a> <a href="/tags/aop/" style="font-size: 10px;">aop</a> <a href="/tags/bean/" style="font-size: 13.33px;">bean</a> <a href="/tags/nmp/" style="font-size: 10px;">nmp</a> <a href="/tags/xml/" style="font-size: 16.67px;">xml</a> <a href="/tags/代理/" style="font-size: 13.33px;">代理</a> <a href="/tags/代理工厂/" style="font-size: 13.33px;">代理工厂</a> <a href="/tags/依赖/" style="font-size: 10px;">依赖</a> <a href="/tags/分页/" style="font-size: 10px;">分页</a> <a href="/tags/增强/" style="font-size: 10px;">增强</a> <a href="/tags/拦截器/" style="font-size: 10px;">拦截器</a> <a href="/tags/数据库/" style="font-size: 10px;">数据库</a> <a href="/tags/数据源/" style="font-size: 10px;">数据源</a> <a href="/tags/缓存/" style="font-size: 10px;">缓存</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://luuman.github.io/">name</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">梁七良</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/images/myheadimage.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">梁七良</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">我还没想好，你就进来了</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+                    
+                        <a class="google" target="_blank" href="#" title="google">google</a>
+                    
+                        <a class="twitter" target="_blank" href="#" title="twitter">twitter</a>
+                    
+                        <a class="linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-SpringNote-SpringAOP(2)Advice" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/10/SpringNote-SpringAOP(2)Advice/" class="article-date">
+      <time datetime="2017-01-10T04:05:48.000Z" itemprop="datePublished">2017-01-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spring一知半解(4)-AOP(2)织入增强类
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a><a class="article-category-link" href="/categories/Spring/Java/">Java</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/代理/">代理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/代理工厂/">代理工厂</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/增强/">增强</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>增强，是向目标类织入的横切逻辑代码，分为：前置增强、后置增强、环绕增强、异常增强、引介增强</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="增强类型"><a href="#增强类型" class="headerlink" title="增强类型"></a>增强类型</h2><p><strong>前置增强</strong>：<code>org.springframework.aop.BeforeAdvice</code>代表前置增强，表示在目标方法执行前实施增强；因为Spring只支持方法级的增强，所以<code>MethodBeforeAdvice</code>是目前可用的前置增强<br><strong>后置增强</strong>：<code>org.springframwwork.aop.AfterReturningAdvice</code>代表后置增强，表示在目标方法执行后实施增强<br><strong>环绕增强</strong>：<code>org.springframwwork.aop.MethodInterceptor</code>代表环绕增强，表示在目标方法执行前后实施增强<br><strong>异常抛出增强</strong>：<code>org.springframwwork.aop.ThrowsAdvice</code>代表抛出异常增强，表示在目标方法抛出异常后实施增强<br><strong>引介增强</strong>：<code>org.springframwwork.aop.IntroductionInterceptor</code>代表引介增强，表示在目标方法中添加一些新的方法和数学</p>
+<h2 id="前置增强"><a href="#前置增强" class="headerlink" title="前置增强"></a>前置增强</h2><h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>我们抽像一个管理员接口，并定义一些行为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface Manager &#123;</div><div class="line">	void enterRoom(String name);</div><div class="line">	void alterSystem(String name);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定义一个业余的管理员类实现管理员接口，该管理员进入机房和修改系统时都没有进行记录就直接操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class AmateurManager implements Manager &#123;</div><div class="line">	public void enterRoom(String name) &#123;</div><div class="line">		System.out.println(<span class="string">"enter"</span> + name + <span class="string">"..."</span>);</div><div class="line">	&#125;</div><div class="line">	public void alterSystem(String name) &#123;</div><div class="line">		System.out.println(<span class="string">"atering"</span> + name +<span class="string">"..."</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>要想该管理员训练有素，就必须对<code>AmateurManager</code>的行为进行规范，进入机房和修改系统前都要进行记录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">import java.lang.reflect.Method;</div><div class="line">import org.springframework.aop.MethodBeforeAdvice;</div><div class="line">public class LoggingBeforeAdvice implements MethodBeforeAdvice &#123;</div><div class="line">	public void before(Method method, Object[] args, Object obj) throws Throwable &#123;</div><div class="line">		String operation = (String)args[0];</div><div class="line">		System.out.println(<span class="string">"Logging Start!"</span> + operation +<span class="string">"."</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>MethodBeforeAdvice</code>是前置增强接口<code>BeforeAdvice</code>，method为目标类方法，args为目标类方法的入参，obj为目标类实例；当该方法发生异常时，将组织目标类方法的执行<br>以下是对<code>AmateurManager</code>应用这个行为前记录的操作：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import org.springframework.aop.BeforeAdvice;</div><div class="line">import org.springframework.aop.framework.ProxyFactory;</div><div class="line">public class TestBeforeAdvice &#123;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		Manager target = new AmateurManager();</div><div class="line">		BeforeAdvice advice = new LoggingBeforeAdvice();</div><div class="line">		//代理工厂</div><div class="line">		ProxyFactory pf = new ProxyFactory();</div><div class="line">		//设置代理目标</div><div class="line">		pf.setTarget(target);</div><div class="line">		//为代理目标添加增强</div><div class="line">		pf.addAdvice(advice);</div><div class="line">		//生成代理实例</div><div class="line">		Manager proxy = (Manager)pf.getProxy();</div><div class="line">		//通过代理调用方法</div><div class="line">		proxy.enterRoom(<span class="string">"Enter lab"</span>);</div><div class="line">		proxy.alterSystem(<span class="string">"Alter hrsystem);</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行可看到以下输出信息:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Logging Start!Enter lab.</div><div class="line">enter Enter lab.</div><div class="line">Logging Start!Alter hrsystem.</div><div class="line">alter Alter hrsystem.</div></pre></td></tr></table></figure>
+<h3 id="ProxyFactory"><a href="#ProxyFactory" class="headerlink" title="ProxyFactory"></a>ProxyFactory</h3><p>上述例子使用<code>org.springframework.aop.framework.ProxyFactory</code>代理工厂将<code>LoggingBeforeAdvice</code>织入到目标类中；<strong>ProxyFactory</strong>内部使用到的就是<code>JDK代理</code>或<code>CGLib代理</code><br>Spring定义了<code>org.springframework.aop.framework.AopProxy</code>接口，并定义了两个final的实现类：<strong>Cglib2AopProxy</strong>和<strong>JdkDynamicAopProxy</strong>，分别使用名字里的两种代理<br>如果通过<code>ProxyFactory</code>的<code>setInterfaces(Class[] interfaces)</code>指定针对的接口代理，则<code>ProxyFactory</code>使用<code>JdkDynamicAopProxy</code>，否则使用<code>Cglib2AopProxy</code><br>可以通过<code>ProxyFactory</code>的<code>setOptimize(true)</code>，让<code>ProxyFactory</code>启动优化代理方式，这样针对接口的代理也会使用<code>Cglib2AopProxy</code><br>使用<code>CGLib代理</code>时，必须引入CGLib类库</p>
+<h3 id="在Spring中配置"><a href="#在Spring中配置" class="headerlink" title="在Spring中配置"></a>在Spring中配置</h3><p>在Spring文件中配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"loggingAdvice"</span> class=<span class="string">"com.lql.advice.LoggingBeforeAdvice"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"target"</span> class=<span class="string">"com.lql.advice.AmateurManger"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"manager"</span> class<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></div><div class="line">	p:proxyInterfaces=<span class="string">"com.lql.advice.Manager</span></div><div class="line">	p:interceptorNames="loggingAdvice<span class="string">"</span></div><div class="line">	p:target-ref="target<span class="string">"/&gt;</span></div></pre></td></tr></table></figure>
+<p><code>ProxyFactory</code>几个常用的配置属性：<br>    <strong>target</strong>：代理的目标对象<br>    <strong>proxyInterfaces</strong>：代理所要实现的一个或多个接口；别名属性：interfaces<br>    <strong>interceptorNames</strong>：需要织入目标对象的Bean列表；这些Bean必须实现<code>org.aoplliance.intercept.MethodInterceptor</code>或<code>org.spring.framework.aop.Advice</code>，配置中的顺序对应调用顺序<br>    <strong>singleton</strong>：返回的代理是否为单实例，默认为单实例<br>    <strong>optimize</strong>：对于sigleton的代理，推荐使用CGLib，对于其他作用于类型的代理，使用JDK代理；因为CGLib创建代理时速度较慢，而创建出的代理对象运行效率较高，而JDK代理相反<br>    <strong>proxyTargetClass</strong>：是否对类进行代理，设置为true时，使用CGLib代理，proxyInterfaces属性会被忽略</p>
+<p>测试如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">String configPath = <span class="string">"com/lql/advice/beas.xml"</span>;</div><div class="line">ApplicationContext ctx = new ClassPahXmlApplicationContext(configPath);</div><div class="line">Manager manager = (Manager)ctx.getBean(<span class="string">"manager);</span></div><div class="line">manager.enterRoom("Enter lab<span class="string">");</span></div></pre></td></tr></table></figure>
+<h2 id="后置增强"><a href="#后置增强" class="headerlink" title="后置增强"></a>后置增强</h2><p>要求管理员在完成行为后也要进行记录，使用后置增强来实现：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import java.lang.reflect.Method;</div><div class="line">import org.springframework.aop.AfterReturningAdvice;</div><div class="line">public class LoggingAfterAdvice implements AfterRetuningAdvice &#123;</div><div class="line">	public void afterReturning(Object <span class="built_in">return</span>Obj, Method method,</div><div class="line">			Object[] args ) throws Throwable &#123;</div><div class="line">		String operation = (String)args[0];</div><div class="line">		System.out.println(<span class="string">"Logging End!"</span> + operation +<span class="string">"."</span>);</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Spring配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"loggingBefore"</span> class=<span class="string">"com.lql.advice.LoggingBeforeAdvice"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"loggingAfter"</span> class=<span class="string">"com.lql.advice.LoggingAfterAdvice"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"target"</span> class=<span class="string">"com.lql.advice.AmateurManger"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"manager"</span> class<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></div><div class="line">	p:proxyInterfaces=<span class="string">"com.lql.advice.Manager</span></div><div class="line">	p:interceptorNames="loggingBefore,loggingAfter<span class="string">"</span></div><div class="line">	p:target-ref="target<span class="string">"/&gt;</span></div></pre></td></tr></table></figure>
+<p>运行前面的测试代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Logging Start!Enter lab.</div><div class="line">enter Enter lab.</div><div class="line">Logging End!Enter lab.</div></pre></td></tr></table></figure>
+<h2 id="环绕增强"><a href="#环绕增强" class="headerlink" title="环绕增强"></a>环绕增强</h2><p>综合前置、后置增强：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import java.lang.reflect.Method;</div><div class="line">import org.aoplliance.intercept.MethodInterceptor;</div><div class="line">import org.aoplliance.intercept.MethodInvocation;</div><div class="line">public class LoggingInterceptor implements MethodInterceptor &#123;</div><div class="line">	public Object invoke(MethidInvocation invocation) throws Throwable &#123;</div><div class="line">		Object[] args = invocation.getArguments();//目标方法入参</div><div class="line">		String operation = (String)args[0];</div><div class="line">		System.out.println(<span class="string">"Logging Start!"</span> + operation +<span class="string">"."</span>);</div><div class="line">		Object obj = invocation.proceed();</div><div class="line">		System.out.println(<span class="string">"Logging End!"</span> + operation +<span class="string">"."</span>);</div><div class="line">		<span class="built_in">return</span> obj;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"loggingAround"</span> class=<span class="string">"com.lql.advice.LoggingInterceptor"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"target"</span> class=<span class="string">"com.lql.advice.AmateurManger"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"manager"</span> class<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></div><div class="line">	p:proxyInterfaces=<span class="string">"com.lql.advice.Manager</span></div><div class="line">	p:interceptorNames="loggingAround<span class="string">"</span></div><div class="line">	p:target-ref="target<span class="string">"/&gt;</span></div></pre></td></tr></table></figure>
+<p>结果和上面的结果一致</p>
+<h2 id="异常抛出增强"><a href="#异常抛出增强" class="headerlink" title="异常抛出增强"></a>异常抛出增强</h2><p>异常抛出增强最适合的应用场景是事务管理，当参与实物的某个Dao发生异常时，事务管理器就必须回滚事务<br>以下模拟事务管理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import java.sql.SQLException;</div><div class="line">public class UserService &#123;</div><div class="line">	public void removeUser(int userId) &#123;</div><div class="line">		//<span class="keyword">do</span> sth...</div><div class="line">		throw new RuntimeException(<span class="string">"operation abnormal."</span>);</div><div class="line">	&#125;</div><div class="line">	public void updateUser(User user) throws Exception &#123;</div><div class="line">		//<span class="keyword">do</span> sth....</div><div class="line">		throw new SQLException(<span class="string">"update abnormal."</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过<code>TransactionManager</code>这个异常抛出增强对业务方法进行增强处理，统一捕捉抛出的异常并回滚事务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import java.lang.reflect.Method;</div><div class="line">import org.springframework.aop.ThrowsAdvice;</div><div class="line">public class TransactionManager implements ThrowsAdvice &#123;</div><div class="line">	public void afterThrowing(Method method, Object[] args, Object target, Exception ex)</div><div class="line">			throws Throwable &#123;</div><div class="line">		System.out.println(<span class="string">"----------"</span>);</div><div class="line">		System.out.println(<span class="string">"method:"</span> + method.getName());</div><div class="line">		System.out.println(<span class="string">"throw excption:"</span> + ex.getMessage());</div><div class="line">		System.out.println(<span class="string">"rollback success"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>ThrowsAdvice</code>没有定义任何方法，它是一个标识接口，在运行期Spring使用反射的机制自行判断，<strong>必须使用方法名</strong><code>public void afterThrowing(Method method, Object[] args, Object target, Exception ex)</code><br><strong>前三个参数是可选的，不选都不选，要么就三个一起选；最后一个参数是<code>Throwable</code>或其子类</strong><br>Spring配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"transactionManager"</span> class=<span class="string">"com.lql.advice.TransactionManager"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"userServiceTarget"</span> class=<span class="string">"com.lql.advice.UserService"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"userService"</span> class=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></div><div class="line">	p:proxyInterfaces=<span class="string">"com.lql.advice.Manager</span></div><div class="line">	p:interceptorNames="loggingAround<span class="string">"</span></div><div class="line">	p:target-ref="target<span class="string">"/&gt;</span></div></pre></td></tr></table></figure>
+<p>以下为输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">----------</div><div class="line">method:removeUser</div><div class="line">throw excption:operation abnormal.</div><div class="line">rollback success</div><div class="line">----------</div><div class="line">method:updateUser</div><div class="line">throw excption:update abnormal.</div><div class="line">rollback success</div></pre></td></tr></table></figure>
+<h2 id="引介增强"><a href="#引介增强" class="headerlink" title="引介增强"></a>引介增强</h2><p>引介增强不是在目标周围织入增强，而是为目标类创建新的方法和属性，所以引介增强的连接点是类级别，而非方法<br>可以为目标类添加一个接口的实现，即为目标类创建实现某接口的代理<br>Spring定义了引介增强接口<code>IntroductionInterceptor</code>，该接口没有任何方法，又提供了<code>DelegatingIntroductionInterceptor</code>实现类，通过扩展该类来实现引介增强<br>使用引介增强，可以对目标来启用或关闭某一项功能</p>
+<p>定义一个用于标识目标类是否支持性能监视的接口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Mornitorable &#123;</div><div class="line">	void <span class="built_in">set</span>MonitorActive(boolean active);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过该接口控制业务类性能监视功能的激活和关闭状态<br>扩展<code>DelegatingIntroductionInterceptor</code>为目标类引入性能见识的可控功能：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import org.aopalliance.intercept.MethodInvocation;</div><div class="line">import org.springframework.aop.support.DelegatingIntroductionInterceptor;</div><div class="line">public class ControllablePerformanceMonitor</div><div class="line">		extends DelegatingIntroductionInterceptor implements Mornitorable &#123;</div><div class="line">	private ThreadLocal&lt;Boolean&gt; MonitorStatusMap = new ThreadLocal&lt;Boolean&gt;();</div><div class="line">	public void <span class="built_in">set</span>MonitorActive(boolean active) &#123;</div><div class="line">		MonitorStatusMap.set(active);</div><div class="line">	&#125;</div><div class="line">	//拦截方法</div><div class="line">	public Object invoke(MethodInvocation mi)throws Throwable &#123;</div><div class="line">		object obj = null;</div><div class="line">		//对于支持性能监视可搜代理，通过判断其状态是否开启性能见识功能</div><div class="line">		<span class="keyword">if</span>(MonitorStatusMap.get() != null &amp;&amp; MonitorStatusMap.get()) &#123;</div><div class="line">			performanceMonitor.begin(mi.getClass().getName()+<span class="string">"."</span>+mi.getMethod().getName());</div><div class="line">			obj = super.invoke(mi);//拦截目标方法的调用</div><div class="line">			PerformanceMonitor.end();</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			obj = super.invoke(mi);</div><div class="line">		&#125;</div><div class="line">		<span class="built_in">return</span> obj;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过Spring配置将引介增强织入到业务类UserService：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;bean id=<span class="string">"pmonitor"</span> class=<span class="string">"com.lql.introduce.ControllablePerformanceMonitor"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"userServiceTarget"</span> class=<span class="string">"com.lql.introduce.UserService"</span>/&gt;</div><div class="line">&lt;bean id=<span class="string">"userService"</span> class=<span class="string">"org.springframework.aop.framework.ProxyFactoryBean"</span></div><div class="line">	p:interfaces=<span class="string">"com.lql.introduce.Monitorable"</span></div><div class="line">	p:target-ref=<span class="string">"userServiceTarget"</span></div><div class="line">	p:interceptorName=<span class="string">"pmonitor"</span></div><div class="line">	p:proxyTargetClass=<span class="string">"true"</span>/&gt;</div></pre></td></tr></table></figure>
+<p>引介增强实现了Monitorable接口，只能通过为目标类创建子类的方式生成引介增强的代理，所以需将<code>proxyTargetClass</code>设为True</p>
+<p>测试方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">import org.springframework.context.ApplicationContext;</div><div class="line">import org.springframework.context.support.ClassPathXmlApplicaitonContext;</div><div class="line">public class TestIntroduce &#123;</div><div class="line">	public static void main(String args[]) &#123;</div><div class="line">		String configPath = <span class="string">"com/lql/introduce/beans.xml"</span>;</div><div class="line">		ApplicationContext ctx = new ClassPathXmlApplicaitonContext(configPath);</div><div class="line">		UserService userService = (UserService)ctx.getBean(<span class="string">"userService"</span>);</div><div class="line">		//默认情况下为开启性能监视功能</div><div class="line">		userService.removeUser(<span class="string">"lql"</span>);</div><div class="line">		//开启性能监视功能</div><div class="line">		Monitorable moniterable = (Monitorable)userService;</div><div class="line">		monitorable.setMonitorActive(<span class="literal">true</span>);</div><div class="line"></div><div class="line">		userService.removeUser(<span class="string">"lql"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/01/10/SpringNote-SpringAOP(2)Advice/">Spring一知半解(4)-AOP(2)织入增强类</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 梁七良 的个人博客">梁七良</a></p>
+        <p><span>发布时间:</span>2017年01月10日 - 12时05分</p>
+        <p><span>最后更新:</span>2017年01月11日 - 16时34分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/10/SpringNote-SpringAOP(2)Advice/" title="Spring一知半解(4)-AOP(2)织入增强类">https://github.com/liangqiliang/2017/01/10/SpringNote-SpringAOP(2)Advice/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://github.com/liangqiliang/2017/01/10/SpringNote-SpringAOP(2)Advice/　　作者: 梁七良" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spring一知半解(3)-AOP(1)基础知识与动态代理</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#增强类型"><span class="toc-number">1.</span> <span class="toc-text">增强类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前置增强"><span class="toc-number">2.</span> <span class="toc-text">前置增强</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#例子"><span class="toc-number">2.1.</span> <span class="toc-text">例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ProxyFactory"><span class="toc-number">2.2.</span> <span class="toc-text">ProxyFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在Spring中配置"><span class="toc-number">2.3.</span> <span class="toc-text">在Spring中配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后置增强"><span class="toc-number">3.</span> <span class="toc-text">后置增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环绕增强"><span class="toc-number">4.</span> <span class="toc-text">环绕增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常抛出增强"><span class="toc-number">5.</span> <span class="toc-text">异常抛出增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引介增强"><span class="toc-number">6.</span> <span class="toc-text">引介增强</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2017/01/10/SpringNote-SpringAOP(2)Advice/" data-title="Spring一知半解(4)-AOP(2)织入增强类" data-url="https://github.com/liangqiliang/2017/01/10/SpringNote-SpringAOP(2)Advice/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"liangqiliang"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/" title="下一篇: Spring一知半解(3)-AOP(1)基础知识与动态代理">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/01/10/SpringNote-SpringAOP(2)Advice/">Spring一知半解(4)-AOP(2)织入增强类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/">Spring一知半解(3)-AOP(1)基础知识与动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/SpringNote-BeansAssemblyInIoc/">Spring一知半解(1)-在IoC容器中装配Bean</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/MultipleDataSource/">Spring一知半解(2)-基于注解多数据源切换及配置问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/03/Mybatis-PagingInterceptorAndCache/">Mybatis一知半解(1)-分页拦截器及相关的缓存机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/XmlConfiguration/">Spring一知半解-Xml配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/BuildBlog(git-hexo-nodejs)/">使用git+hexo+nodejs搭建个人博客</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 梁七良
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >visit: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">view: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

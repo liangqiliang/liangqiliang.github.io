@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Spring一知半解-Xml配置 | 卖姑娘的小火柴</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Spring配置复杂，寻求一种能够归纳大部分配置的格式文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring一知半解-Xml配置">
+<meta property="og:url" content="https://github.com/liangqiliang/2016/12/30/XmlConfiguration/index.html">
+<meta property="og:site_name" content="卖姑娘的小火柴">
+<meta property="og:description" content="Spring配置复杂，寻求一种能够归纳大部分配置的格式文件">
+<meta property="og:image" content="http://img.blog.csdn.net/20130918150129015?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20130918150250171?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20130918150314578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20130918150327968?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:image" content="http://img.blog.csdn.net/20130918150343562?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+<meta property="og:updated_time" content="2017-01-11T08:32:39.038Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring一知半解-Xml配置">
+<meta name="twitter:description" content="Spring配置复杂，寻求一种能够归纳大部分配置的格式文件">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20130918150129015?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
+  
+    <link rel="alternative" href="/atom.xml" title="卖姑娘的小火柴" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/images/logo.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/images/myheadimage.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">梁七良</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">我还没想好，你就进来了</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="#" title="weibo">weibo</a>
+                            
+                                <a class="fl google" target="_blank" href="#" title="google">google</a>
+                            
+                                <a class="fl twitter" target="_blank" href="#" title="twitter">twitter</a>
+                            
+                                <a class="fl linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AOP/" style="font-size: 10px;">AOP</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/NodeJs/" style="font-size: 10px;">NodeJs</a> <a href="/tags/Schema/" style="font-size: 10px;">Schema</a> <a href="/tags/Spring/" style="font-size: 20px;">Spring</a> <a href="/tags/aop/" style="font-size: 10px;">aop</a> <a href="/tags/bean/" style="font-size: 13.33px;">bean</a> <a href="/tags/nmp/" style="font-size: 10px;">nmp</a> <a href="/tags/xml/" style="font-size: 16.67px;">xml</a> <a href="/tags/代理/" style="font-size: 13.33px;">代理</a> <a href="/tags/代理工厂/" style="font-size: 13.33px;">代理工厂</a> <a href="/tags/依赖/" style="font-size: 10px;">依赖</a> <a href="/tags/分页/" style="font-size: 10px;">分页</a> <a href="/tags/增强/" style="font-size: 10px;">增强</a> <a href="/tags/拦截器/" style="font-size: 10px;">拦截器</a> <a href="/tags/数据库/" style="font-size: 10px;">数据库</a> <a href="/tags/数据源/" style="font-size: 10px;">数据源</a> <a href="/tags/缓存/" style="font-size: 10px;">缓存</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://luuman.github.io/">name</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">梁七良</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/images/myheadimage.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">梁七良</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">我还没想好，你就进来了</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+                    
+                        <a class="google" target="_blank" href="#" title="google">google</a>
+                    
+                        <a class="twitter" target="_blank" href="#" title="twitter">twitter</a>
+                    
+                        <a class="linkedin" target="_blank" href="#" title="linkedin">linkedin</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-XmlConfiguration" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/30/XmlConfiguration/" class="article-date">
+      <time datetime="2016-12-30T06:36:53.000Z" itemprop="datePublished">2016-12-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spring一知半解-Xml配置
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Spring/">Spring</a><a class="article-category-link" href="/categories/Spring/Java/">Java</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Schema/">Schema</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bean/">bean</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/xml/">xml</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>Spring配置复杂，寻求一种能够归纳大部分配置的格式文件</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="Schema格式"><a href="#Schema格式" class="headerlink" title="Schema格式"></a>Schema格式</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>可扩展标记语言架构是以可扩展标记语言（标准通用标记语言的子集）为基础的，它用于可替代文档类型定义（外语缩写：DTD）；一份XML schema文件描述了可扩展标记语言文档的结构。<br>一份XML Schema定义了：<br>    可以出现在文档里的元素；<br>    可以出现在文档里的属性；<br>    哪些元素是子元素；<br>    子元素的顺序；<br>    子元素的数量；<br>    一个元素应是否能包含文本，或应该是空的；<br>    元素和属性的数据类型；<br>    元素和属性的默认值和固定值。</p>
+<h2 id="XML配置文件"><a href="#XML配置文件" class="headerlink" title="XML配置文件"></a>XML配置文件</h2><h3 id="Spring配置详解"><a href="#Spring配置详解" class="headerlink" title="Spring配置详解"></a>Spring配置详解</h3><p><img src="http://img.blog.csdn.net/20130918150129015?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Spring配置详解1"><br><img src="http://img.blog.csdn.net/20130918150250171?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Spring配置详解2"><br><img src="http://img.blog.csdn.net/20130918150314578?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Spring配置详解3"><br><img src="http://img.blog.csdn.net/20130918150327968?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Spring配置详解4"><br><img src="http://img.blog.csdn.net/20130918150343562?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMjA0OTQ2Mw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="Spring配置详解5"></p>
+<h3 id="Spring配置代码"><a href="#Spring配置代码" class="headerlink" title="Spring配置代码"></a>Spring配置代码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line">&lt;beans xmlns=<span class="string">"http://www.springframework.org/schema/beans"</span></div><div class="line">      xmlns:xsi=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">      xmlns:context=<span class="string">"http://www.springframework.org/schema/context"</span></div><div class="line">      xmlns:tx=<span class="string">"http://www.springframework.org/schema/tx"</span></div><div class="line">      xmlns:aop=<span class="string">"http://www.springframework.org/schema/aop"</span></div><div class="line">      xmlns:task=<span class="string">"http://www.springframework.org/schema/task"</span></div><div class="line">      xsi:schemaLocation=<span class="string">"http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd</span></div><div class="line">	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd</div><div class="line">	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd</div><div class="line">	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd</div><div class="line">	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd"&gt;</div><div class="line">	&lt;!--开启注解处理器--&gt;</div><div class="line">	&lt;context:annotion-config/&gt;</div><div class="line">	&lt;!--开启组件自动扫描，扫描路径由base-package指定--&gt;</div><div class="line">	&lt;context:compoment-scan base-package=<span class="string">"test.spring"</span>&gt;</div><div class="line">	&lt;!--开启基于@Aspectj切面的注解处理器--&gt;</div><div class="line">	&lt;aop:aspectj-autoproxy/&gt;</div><div class="line">	&lt;!--使用class属性指定的类的默认构造方法创建一个单实例Bean，名称由ID属性指定。--&gt;</div><div class="line">	&lt;bean id=<span class="string">"Bean实例名称"</span> class=<span class="string">"Bean类的全限定路径"</span>&gt;</div><div class="line">       &lt;!--Scope属性为prototype时表示每次将生成新的实例，即原型模式。--&gt;</div><div class="line">	&lt;bean id=<span class="string">"Bean实例名称"</span> class=<span class="string">"Bean类的全限定路径"</span> scope=<span class="string">"prototype"</span> &gt;</div><div class="line">       &lt;!--Init-method属性用于指定对象实例化后要调用的初始化方法。--&gt;</div><div class="line">       &lt;!--Destory-method属性用于指定对象在销毁时要调用的方法。--&gt;</div><div class="line">	&lt;bean id=<span class="string">"Bean实例名称"</span> class=<span class="string">"Bean类的全限定路径"</span> init-method=<span class="string">"初始化时调用的方法"</span>  desctory-method=<span class="string">"对象销毁时调用的方法"</span> &gt;</div><div class="line">	&lt;bean id=<span class="string">"Bean实例名称"</span> class=<span class="string">"Bean类的全限定路径"</span>&gt;</div><div class="line">       	&lt;!--Property标签用于对Bean实例中的属性进行赋值，对于基本数据类型的值可以直接用value属性指定，而其他bean引用则可以使用ref。--&gt;</div><div class="line">   		&lt;property name=<span class="string">"Bean类中的属性名称"</span> ref=“要引用的Bean名称<span class="string">"/&gt;</span></div><div class="line">   		&lt;property name="Bean类中的属性名称<span class="string">" value=“直接指定属性值"</span>/&gt;</div><div class="line">       	&lt;!--创建一个内部匿名Bean实例赋值给指定的属性，该匿名实例无法被外界访问。--&gt;</div><div class="line">   		&lt;property name=<span class="string">"Bean类中的属性名称"</span> &gt;</div><div class="line">       		&lt;bean class=<span class="string">"Bean类全限定路径"</span>/&gt;</div><div class="line">       	&lt;/propertype&gt;</div><div class="line">		&lt;!--Set标签用于创建一个Set类型的实例赋值给指定的Set类型属性，Set实例中的元素通过Value或者ref子标签指定，对于基本数据类型可以使用value标签，如果是其他的Bean类实例作为Set元素则需要使用ref标签指定。--&gt;</div><div class="line">		&lt;property name=<span class="string">"Bean类中的Set属性名称"</span>&gt;</div><div class="line">			&lt;<span class="built_in">set</span>&gt;</div><div class="line">				&lt;value&gt;<span class="built_in">set</span>中的元素&lt;/value&gt;</div><div class="line">				&lt;ref bean=<span class="string">"要引用的Bean名称"</span>/&gt;</div><div class="line">			&lt;/<span class="built_in">set</span>&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">	&lt;!--Map标签用于创建一个map类型的实例赋值给指定的额Map类型属性，Map实例中的元素通过entry子标签来指定，Map元素的键由entry标签的key属性指定，值由value或者ref来指定。--&gt;</div><div class="line">		&lt;property name=<span class="string">"Bean类中的Map类型属性名称"</span>&gt;</div><div class="line">			&lt;map&gt;</div><div class="line">				&lt;entry key=<span class="string">"map元素的key"</span>&gt;</div><div class="line">					&lt;value&gt;map元素的value&lt;/value&gt;</div><div class="line">				&lt;/entry&gt;</div><div class="line">				&lt;entry key=<span class="string">"map元素的key"</span>&gt;</div><div class="line">					&lt;ref bean=<span class="string">"要引用的bean名称"</span>/&gt;</div><div class="line">			&lt;/map&gt;</div><div class="line">		&lt;/property&gt;</div><div class="line">		&lt;property name=<span class="string">"Bean类中的Proiperties类型的属性名称"</span>&gt;</div><div class="line">			&lt;props&gt;</div><div class="line">				&lt;prop key=<span class="string">"properties元素的key"</span>&gt;Properties元素的value&lt;/prop&gt;</div><div class="line">       		&lt;/props&gt;</div><div class="line">       	&lt;/property&gt;</div><div class="line">       	&lt;!-创建一个properties类型的实例赋值给指定的Properties类型属性，</div><div class="line">       	Properties实例中属性项由prop标签生成，属性项元素的键由key属性指定，属性项元素的值可直接放置在prop标签体中。 --&gt;</div><div class="line">		&lt;property name=<span class="string">""</span>&gt;</div><div class="line">			&lt;!-Null标签用于给需要赋null值的属性进行赋null值。 --&gt;</div><div class="line">			&lt;null/&gt;</div><div class="line">       	&lt;/property&gt;</div><div class="line">       &lt;/bean&gt;</div><div class="line">	&lt;!-通过传入相应的构造参数进行Bean实例化，constructor-arg标签用于制定一个构造参数，其index属性表明当前是第几个构造参数。</div><div class="line">       Type属性声明构造参数的类型，构造参数的值如果是基本类型可由vlue直接指定，如果是对象的引用，则由ref指定。 --&gt;</div><div class="line">       &lt;bean id=<span class="string">"Bean实例名称"</span> class=<span class="string">"Bean类全名"</span>&gt;</div><div class="line">		&lt;construct-arg index=<span class="string">"从0开始的序号"</span> <span class="built_in">type</span>=<span class="string">"构造参数的类型"</span> value=<span class="string">"构造参数的值"</span>/&gt;</div><div class="line">		&lt;construct-arg index=<span class="string">"从0开始的序号"</span> <span class="built_in">type</span>=<span class="string">"构造参数的类型"</span> ref=<span class="string">"要引用的bean名称"</span>/&gt;</div><div class="line">       &lt;/bean&gt;</div><div class="line">       &lt;aop:config&gt;</div><div class="line">		&lt;aop:aspect id=<span class="string">"切面ID"</span> ref=<span class="string">"要引用的切面实例名称"</span>&gt;</div><div class="line">			&lt;aop:pointcutid=<span class="string">"切入点名称"</span> expression=<span class="string">"切入点正则表达式"</span>/&gt;</div><div class="line">			&lt;aop:before pointcut-ref=<span class="string">"切入点名称"</span> method=<span class="string">"切面类中用作前置通知的方法名"</span>/&gt;</div><div class="line">			&lt;aop:after-returning pointcut-ref=<span class="string">"切入点名称"</span> method=<span class="string">"切面类中用作后置通知的方法名"</span>/&gt;</div><div class="line">			&lt;aop:after-throwing pointcut-ref=<span class="string">"切入点名称"</span> method=<span class="string">"切面类中用作异常通知的方法名"</span>/&gt;</div><div class="line">			&lt;aop:after pointcut-ref=<span class="string">"切入点名称"</span> method=<span class="string">"切面类中用作最终通知的方法名"</span>/&gt;</div><div class="line">			&lt;aop:around pointcut-ref=<span class="string">"切入点名称"</span> mthod=<span class="string">"切面类中用作环绕通知的方法名"</span>/&gt;</div><div class="line">		&lt;/aop:aspect&gt;</div><div class="line">       &lt;/aop:config&gt;</div><div class="line">       &lt;!-配置事务管理器 --&gt;</div><div class="line">       &lt;bean id=<span class="string">"事务管理器实例名称"</span> class=<span class="string">"事务管理器的全限定名称"</span>&gt;</div><div class="line">		&lt;property name=<span class="string">"数据源属性名称"</span> ref=<span class="string">"要引用的数据源实例名称"</span>/&gt;</div><div class="line">	&lt;/bean&gt;</div><div class="line">	&lt;!-配置一个事务通知 --&gt;</div><div class="line">	&lt;tx:advice id=<span class="string">"事务通知名称"</span> transaction-manager=<span class="string">"事务管理器实例名称"</span>&gt;</div><div class="line">		&lt;tx:attributes&gt;</div><div class="line">			&lt;tx:method name=<span class="string">"get*"</span> <span class="built_in">read</span>-only=<span class="string">"true"</span> propagation=<span class="string">"NOT_SUPPORTED"</span>/&gt;</div><div class="line">			&lt;tx:method name=<span class="string">"*"</span>/&gt;</div><div class="line">		&lt;/tx:attributes&gt;</div><div class="line">       &lt;/tx:advice&gt;</div><div class="line">       &lt;!-使用AOP技术实现事务管理 --&gt;</div><div class="line">       &lt;aop:config&gt;</div><div class="line">		&lt;aop:pointcut id=<span class="string">"事务切入点名称"</span> expression=<span class="string">"事务切入点正则表达式"</span>/&gt;</div><div class="line">		&lt;aop:advisor advice-ref=<span class="string">"事务通知名称"</span> pointcut-ref=<span class="string">"事务切入点名称"</span>/&gt;</div><div class="line">	&lt;/aop:config&gt;</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/12/30/XmlConfiguration/">Spring一知半解-Xml配置</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 梁七良 的个人博客">梁七良</a></p>
+        <p><span>发布时间:</span>2016年12月30日 - 14时36分</p>
+        <p><span>最后更新:</span>2017年01月11日 - 16时32分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/30/XmlConfiguration/" title="Spring一知半解-Xml配置">https://github.com/liangqiliang/2016/12/30/XmlConfiguration/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://github.com/liangqiliang/2016/12/30/XmlConfiguration/　　作者: 梁七良" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2017/01/03/Mybatis-PagingInterceptorAndCache/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Mybatis一知半解(1)-分页拦截器及相关的缓存机制
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/12/30/BuildBlog(git-hexo-nodejs)/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">使用git+hexo+nodejs搭建个人博客</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Schema格式"><span class="toc-number">1.</span> <span class="toc-text">Schema格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XML配置文件"><span class="toc-number">2.</span> <span class="toc-text">XML配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring配置详解"><span class="toc-number">2.1.</span> <span class="toc-text">Spring配置详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring配置代码"><span class="toc-number">2.2.</span> <span class="toc-text">Spring配置代码</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/12/30/XmlConfiguration/" data-title="Spring一知半解-Xml配置" data-url="https://github.com/liangqiliang/2016/12/30/XmlConfiguration/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"liangqiliang"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/01/03/Mybatis-PagingInterceptorAndCache/" title="上一篇: Mybatis一知半解(1)-分页拦截器及相关的缓存机制">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2016/12/30/BuildBlog(git-hexo-nodejs)/" title="下一篇: 使用git+hexo+nodejs搭建个人博客">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/01/10/SpringNote-SpringAOP(2)Advice/">Spring一知半解(4)-AOP(2)织入增强类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/09/SpringNote-SpringAOP(1)BasicAndProxy/">Spring一知半解(3)-AOP(1)基础知识与动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/05/SpringNote-BeansAssemblyInIoc/">Spring一知半解(1)-在IoC容器中装配Bean</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/MultipleDataSource/">Spring一知半解(2)-基于注解多数据源切换及配置问题</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/03/Mybatis-PagingInterceptorAndCache/">Mybatis一知半解(1)-分页拦截器及相关的缓存机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/XmlConfiguration/">Spring一知半解-Xml配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/BuildBlog(git-hexo-nodejs)/">使用git+hexo+nodejs搭建个人博客</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 梁七良
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >visit: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">view: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
